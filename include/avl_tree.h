@@ -3,24 +3,30 @@
 
 #include <bits/stl_algobase.h>
 #include <bits/allocator.h>
-//#include <bits/stl_function.h>
-//#include <bits/cpp_type_traits.h>
+#include <bits/stl_function.h>
+#include <bits/cpp_type_traits.h>
 #include <ext/alloc_traits.h>
 #include <ext/aligned_buffer.h>
 
 namespace not_std
 {
-    enum _Rb_tree_color { _S_red = false, _S_black = true };
+    typedef unsigned char _Avl_tree_height;
 
     struct _Avl_tree_node_base
     {
         typedef _Avl_tree_node_base* _Base_ptr;
         typedef const _Avl_tree_node_base* _Const_Base_ptr;
 
-        _Rb_tree_color	_M_color;
-        _Base_ptr		_M_parent;
-        _Base_ptr		_M_left;
-        _Base_ptr		_M_right;
+        _Avl_tree_height	_M_height;
+        _Base_ptr		    _M_parent;
+        _Base_ptr		    _M_left;
+        _Base_ptr		    _M_right;
+
+        static char
+        _Balance_factor(_Base_ptr __x) noexcept
+        {
+            return static_cast<char> (__x->_M_right->_M_height - __x->_M_left->_M_height);
+        }
 
         static _Base_ptr
         _S_minimum(_Base_ptr __x) noexcept
@@ -158,12 +164,12 @@ namespace not_std
 
         typedef _Avl_tree_iterator<_Tp> iterator;
 
-        typedef std::bidirectional_iterator_tag     iterator_category;
-        typedef std::ptrdiff_t                           difference_type;
+        typedef std::bidirectional_iterator_tag         iterator_category;
+        typedef std::ptrdiff_t                          difference_type;
 
         typedef _Avl_tree_const_iterator<_Tp>           _Self;
         typedef _Avl_tree_node_base::_Const_Base_ptr    _Base_ptr;
-        typedef const _Avl_tree_node<_Tp>*               _Link_type;
+        typedef const _Avl_tree_node<_Tp>*              _Link_type;
 
         _Avl_tree_const_iterator() noexcept
                 : _M_node() { }
@@ -375,8 +381,8 @@ namespace not_std
         typedef const value_type* 	const_pointer;
         typedef value_type& 		reference;
         typedef const value_type& 	const_reference;
-        typedef std::size_t 				size_type;
-        typedef std::ptrdiff_t 			difference_type;
+        typedef std::size_t 		size_type;
+        typedef std::ptrdiff_t 		difference_type;
         typedef _Alloc 				allocator_type;
 
         _Node_allocator&
@@ -447,14 +453,13 @@ namespace not_std
         _M_clone_node(_Const_Link_type __x, _NodeGen& __node_gen)
         {
             _Link_type __tmp = __node_gen(*__x->_M_valptr());
-            __tmp->_M_color = __x->_M_color;
+            __tmp->_M_height = __x->_M_height;
             __tmp->_M_left = 0;
             __tmp->_M_right = 0;
             return __tmp;
         }
 
     protected:
-        // Unused _Is_pod_comparator is kept as it is part of mangled name.
         template<typename _Key_compare>
         struct _Avl_tree_impl : public _Node_allocator
         {
@@ -477,6 +482,7 @@ namespace not_std
             void
             _M_reset()
             {
+                this->_M_header._M_height = 0;
                 this->_M_header._M_parent = 0;
                 this->_M_header._M_left = &this->_M_header;
                 this->_M_header._M_right = &this->_M_header;
@@ -487,7 +493,6 @@ namespace not_std
             void
             _M_initialize()
             {
-                this->_M_header._M_color = _S_red;
                 this->_M_header._M_parent = 0;
                 this->_M_header._M_left = &this->_M_header;
                 this->_M_header._M_right = &this->_M_header;
@@ -845,7 +850,6 @@ namespace not_std
             _M_erase_aux(__position);
             return __result._M_const_cast();
         }
-
 
         _GLIBCXX_ABI_TAG_CXX11
         iterator
@@ -1555,7 +1559,6 @@ namespace not_std
             __t._M_root()->_M_parent = __t._M_end();
             std::swap(this->_M_impl._M_node_count, __t._M_impl._M_node_count);
         }
-        // No need to swap header's color as it does not change.
         std::swap(this->_M_impl._M_key_compare, __t._M_impl._M_key_compare);
 
         _Alloc_traits::_S_on_swap(_M_get_Node_allocator(),

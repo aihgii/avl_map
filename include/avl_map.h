@@ -3,10 +3,10 @@
 
 #include "avl_tree.h"
 
-//#include <bits/functexcept.h>
-//#include <bits/concept_check.h>
-//#include <initializer_list>
-//#include <tuple>
+#include <bits/functexcept.h>
+#include <bits/concept_check.h>
+#include <initializer_list>
+#include <tuple>
 
 namespace not_std
 {

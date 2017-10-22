@@ -41,15 +41,11 @@ namespace not_std
     static _Avl_tree_node_base*
     local_Avl_tree_decrement(_Avl_tree_node_base* __x) throw ()
     {
-        if (__x->_M_color == _S_red
-            && __x->_M_parent->_M_parent == __x)
-            __x = __x->_M_right;
-        else if (__x->_M_left != 0)
+        if (__x->_M_left != 0)
         {
-            _Avl_tree_node_base* __y = __x->_M_left;
-            while (__y->_M_right != 0)
-                __y = __y->_M_right;
-            __x = __y;
+            __x = __x->_M_left;
+            while (__x->_M_right != 0)
+                __x = __x->_M_right;
         }
         else
         {
@@ -59,7 +55,8 @@ namespace not_std
                 __x = __y;
                 __y = __y->_M_parent;
             }
-            __x = __y;
+            if (__x->_M_left != __y)
+                __x = __y;
         }
         return __x;
     }
