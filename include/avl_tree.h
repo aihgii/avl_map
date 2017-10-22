@@ -25,7 +25,10 @@ namespace not_std
         static char
         _Balance_factor(_Base_ptr __x) noexcept
         {
-            return static_cast<char> (__x->_M_right->_M_height - __x->_M_left->_M_height);
+            auto __l = __x->_M_left;
+            auto __r = __x->_M_right;
+            return static_cast<char> ((__r ? __r->_M_height : 0) -
+                                      (__l ? __l->_M_height : 0));
         }
 
         static _Base_ptr
@@ -2031,46 +2034,46 @@ namespace not_std
         return __n;
     }
 
-    _GLIBCXX_PURE unsigned int
-    _Avl_tree_black_count(const _Avl_tree_node_base* __node,
-                          const _Avl_tree_node_base* __root) throw ();
-
-    template<typename _Key, typename _Val, typename _KeyOfValue, typename _Compare, typename _Alloc>
-    bool
-    _Avl_tree<_Key,_Val,_KeyOfValue,_Compare,_Alloc>::__avl_verify() const
-    {
-        if (_M_impl._M_node_count == 0 || begin() == end())
-            return _M_impl._M_node_count == 0 && begin() == end()
-                   && this->_M_impl._M_header._M_left == _M_end()
-                   && this->_M_impl._M_header._M_right == _M_end();
-
-        unsigned int __len = _Avl_tree_black_count(_M_leftmost(), _M_root());
-        for (const_iterator __it = begin(); __it != end(); ++__it)
-        {
-            _Const_Link_type __x = static_cast<_Const_Link_type>(__it._M_node);
-            _Const_Link_type __L = _S_left(__x);
-            _Const_Link_type __R = _S_right(__x);
-
-            if (__x->_M_color == _S_red)
-                if ((__L && __L->_M_color == _S_red)
-                    | (__R && __R->_M_color == _S_red))
-              return false;
-
-            if (__L && _M_impl._M_key_compare(_S_key(__x), _S_key(__L)))
-                return false;
-            if (__R && _M_impl._M_key_compare(_S_key(__R), _S_key(__x)))
-                return false;
-
-            if (!__L && !__R && _Avl_tree_black_count(__x, _M_root()) != __len)
-                return false;
-        }
-
-        if (_M_leftmost() != _Avl_tree_node_base::_S_minimum(_M_root()))
-            return false;
-        if (_M_rightmost() != _Avl_tree_node_base::_S_maximum(_M_root()))
-            return false;
-        return true;
-    }
+//    _GLIBCXX_PURE unsigned int
+//    _Avl_tree_black_count(const _Avl_tree_node_base* __node,
+//                          const _Avl_tree_node_base* __root) throw ();
+//
+//    template<typename _Key, typename _Val, typename _KeyOfValue, typename _Compare, typename _Alloc>
+//    bool
+//    _Avl_tree<_Key,_Val,_KeyOfValue,_Compare,_Alloc>::__avl_verify() const
+//    {
+//        if (_M_impl._M_node_count == 0 || begin() == end())
+//            return _M_impl._M_node_count == 0 && begin() == end()
+//                   && this->_M_impl._M_header._M_left == _M_end()
+//                   && this->_M_impl._M_header._M_right == _M_end();
+//
+//        unsigned int __len = _Avl_tree_black_count(_M_leftmost(), _M_root());
+//        for (const_iterator __it = begin(); __it != end(); ++__it)
+//        {
+//            _Const_Link_type __x = static_cast<_Const_Link_type>(__it._M_node);
+//            _Const_Link_type __L = _S_left(__x);
+//            _Const_Link_type __R = _S_right(__x);
+//
+//            if (__x->_M_color == _S_red)
+//                if ((__L && __L->_M_color == _S_red)
+//                    | (__R && __R->_M_color == _S_red))
+//              return false;
+//
+//            if (__L && _M_impl._M_key_compare(_S_key(__x), _S_key(__L)))
+//                return false;
+//            if (__R && _M_impl._M_key_compare(_S_key(__R), _S_key(__x)))
+//                return false;
+//
+//            if (!__L && !__R && _Avl_tree_black_count(__x, _M_root()) != __len)
+//                return false;
+//        }
+//
+//        if (_M_leftmost() != _Avl_tree_node_base::_S_minimum(_M_root()))
+//            return false;
+//        if (_M_rightmost() != _Avl_tree_node_base::_S_maximum(_M_root()))
+//            return false;
+//        return true;
+//    }
 
 } // namespace
 

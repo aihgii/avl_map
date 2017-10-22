@@ -1,8 +1,6 @@
 #include "gtest/gtest.h"
 #include "../include/avl_map.h"
 
-#include <tuple>
-
 class AvlMapTest : public ::testing::Test {
 protected:
     virtual void SetUp() {}
