@@ -6,10 +6,10 @@ namespace not_std
     static _Avl_tree_node_base*
     local_Avl_tree_increment(_Avl_tree_node_base* __x) throw ()
     {
-        if (__x->_M_right != 0)
+        if (__x->_M_right != nullptr)
         {
             __x = __x->_M_right;
-            while (__x->_M_left != 0)
+            while (__x->_M_left != nullptr)
                 __x = __x->_M_left;
         }
         else
@@ -41,10 +41,10 @@ namespace not_std
     static _Avl_tree_node_base*
     local_Avl_tree_decrement(_Avl_tree_node_base* __x) throw ()
     {
-        if (__x->_M_left != 0)
+        if (__x->_M_left != nullptr)
         {
             __x = __x->_M_left;
-            while (__x->_M_right != 0)
+            while (__x->_M_right != nullptr)
                 __x = __x->_M_right;
         }
         else
@@ -77,10 +77,13 @@ namespace not_std
     local_Avl_tree_fix_height(_Avl_tree_node_base* __x)
     {
         _Avl_tree_height hl = __x->_M_left
-            ? __x->_M_left->_M_height : 0;
+            ? __x->_M_left->_M_height
+            : static_cast<_Avl_tree_height> (0);
         _Avl_tree_height hr = __x->_M_right
-            ? __x->_M_right->_M_height : 0;
-        __x->_M_height = (hl > hr ? hl : hr) + 1;
+            ? __x->_M_right->_M_height
+            : static_cast<_Avl_tree_height> (0);
+        __x->_M_height = (hl > hr ? hl : hr)
+                         + static_cast<_Avl_tree_height> (1);
     }
 
     static void
@@ -90,7 +93,7 @@ namespace not_std
         _Avl_tree_node_base* const __y = __x->_M_right;
 
         __x->_M_right = __y->_M_left;
-        if (__y->_M_left !=0)
+        if (__y->_M_left != nullptr)
             __y->_M_left->_M_parent = __x;
         __y->_M_parent = __x->_M_parent;
 
@@ -109,12 +112,12 @@ namespace not_std
 
     static void
     local_Avl_tree_rotate_right(_Avl_tree_node_base* const __x,
-                               _Avl_tree_node_base*& __root)
+                                _Avl_tree_node_base*& __root)
     {
         _Avl_tree_node_base* const __y = __x->_M_left;
 
         __x->_M_left = __y->_M_right;
-        if (__y->_M_right != 0)
+        if (__y->_M_right != nullptr)
             __y->_M_right->_M_parent = __x;
         __y->_M_parent = __x->_M_parent;
 
@@ -140,10 +143,10 @@ namespace not_std
         _Avl_tree_node_base *& __root = __header._M_parent;
 
         // Initialize fields in new node to insert.
+        __x->_M_height = 0;
         __x->_M_parent = __p;
-        __x->_M_left = 0;
-        __x->_M_right = 0;
-        __x->_M_color = _S_red;
+        __x->_M_left = nullptr;
+        __x->_M_right = nullptr;
 
         // Insert.
         // Make new node child of parent and maintain root, leftmost and
@@ -168,58 +171,28 @@ namespace not_std
             if (__p == __header._M_right)
                 __header._M_right = __x; // maintain rightmost pointing to max node
         }
-        // Rebalance.
-        while (__x != __root
-               && __x->_M_parent->_M_color == _S_red)
-        {
-            _Avl_tree_node_base* const __xpp = __x->_M_parent->_M_parent;
 
-            if (__x->_M_parent == __xpp->_M_left)
+        // Rebalance.
+        do
+        {
+            auto __bfactor = _Avl_tree_node_base::_Balance_factor(__x);
+
+            if (__bfactor > 1)
             {
-                _Avl_tree_node_base* const __y = __xpp->_M_right;
-                if (__y && __y->_M_color == _S_red)
-                {
-                    __x->_M_parent->_M_color = _S_black;
-                    __y->_M_color = _S_black;
-                    __xpp->_M_color = _S_red;
-                    __x = __xpp;
-                }
-                else
-                {
-                    if (__x == __x->_M_parent->_M_right)
-                    {
-                        __x = __x->_M_parent;
-                        local_Avl_tree_rotate_left(__x, __root);
-                    }
-                    __x->_M_parent->_M_color = _S_black;
-                    __xpp->_M_color = _S_red;
-                    local_Avl_tree_rotate_right(__xpp, __root);
-                }
+                if (_Avl_tree_node_base::_Balance_factor(__x->_M_right) < 0)
+                    local_Avl_tree_rotate_right(__x->_M_right, __root);
+                local_Avl_tree_rotate_left(__x, __root);
             }
-            else
+            else if (__bfactor < -1)
             {
-                _Avl_tree_node_base* const __y = __xpp->_M_left;
-                if (__y && __y->_M_color == _S_red)
-                {
-                    __x->_M_parent->_M_color = _S_black;
-                    __y->_M_color = _S_black;
-                    __xpp->_M_color = _S_red;
-                    __x = __xpp;
-                }
-                else
-                {
-                    if (__x == __x->_M_parent->_M_left)
-                    {
-                        __x = __x->_M_parent;
-                        local_Avl_tree_rotate_right(__x, __root);
-                    }
-                    __x->_M_parent->_M_color = _S_black;
-                    __xpp->_M_color = _S_red;
-                    local_Avl_tree_rotate_left(__xpp, __root);
-                }
+                if (_Avl_tree_node_base::_Balance_factor(__x->_M_left) > 0)
+                    local_Avl_tree_rotate_left(__x->_M_left, __root);
+                local_Avl_tree_rotate_right(__x, __root);
             }
-        }
-        __root->_M_color = _S_black;
+            local_Avl_tree_fix_height(__x);
+
+            __x = __x->_M_parent;
+        } while (__x != __root);
     }
 
     _Avl_tree_node_base*
@@ -230,19 +203,19 @@ namespace not_std
         _Avl_tree_node_base *& __leftmost = __header._M_left;
         _Avl_tree_node_base *& __rightmost = __header._M_right;
         _Avl_tree_node_base* __y = __z;
-        _Avl_tree_node_base* __x = 0;
-        _Avl_tree_node_base* __x_parent = 0;
+        _Avl_tree_node_base* __x = nullptr;
+        _Avl_tree_node_base* __x_parent = nullptr;
 
-        if (__y->_M_left == 0)     // __z has at most one non-null child. y == z.
+        if (__y->_M_left == nullptr)     // __z has at most one non-null child. y == z.
             __x = __y->_M_right;     // __x might be null.
         else
-        if (__y->_M_right == 0)  // __z has exactly one non-null child. y == z.
+        if (__y->_M_right == nullptr)  // __z has exactly one non-null child. y == z.
             __x = __y->_M_left;    // __x is not null.
         else
         {
             // __z has two non-null children.  Set __y to
             __y = __y->_M_right;   //   __z's successor.  __x might be null.
-            while (__y->_M_left != 0)
+            while (__y->_M_left != nullptr)
                 __y = __y->_M_left;
             __x = __y->_M_right;
         }
@@ -387,7 +360,7 @@ namespace not_std
     _Avl_tree_black_count(const _Avl_tree_node_base* __node,
                          const _Avl_tree_node_base* __root) throw ()
     {
-        if (__node == 0)
+        if (__node == nullptr)
             return 0;
         unsigned int __sum = 0;
         do
@@ -398,7 +371,7 @@ namespace not_std
                 break;
             __node = __node->_M_parent;
         }
-        while (1);
+        while (true);
         return __sum;
     }
 

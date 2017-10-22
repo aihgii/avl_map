@@ -31,28 +31,28 @@ namespace not_std
         static _Base_ptr
         _S_minimum(_Base_ptr __x) noexcept
         {
-            while (__x->_M_left != 0) __x = __x->_M_left;
+            while (__x->_M_left != nullptr) __x = __x->_M_left;
             return __x;
         }
 
         static _Const_Base_ptr
         _S_minimum(_Const_Base_ptr __x) noexcept
         {
-            while (__x->_M_left != 0) __x = __x->_M_left;
+            while (__x->_M_left != nullptr) __x = __x->_M_left;
             return __x;
         }
 
         static _Base_ptr
         _S_maximum(_Base_ptr __x) noexcept
         {
-            while (__x->_M_right != 0) __x = __x->_M_right;
+            while (__x->_M_right != nullptr) __x = __x->_M_right;
             return __x;
         }
 
         static _Const_Base_ptr
         _S_maximum(_Const_Base_ptr __x) noexcept
         {
-            while (__x->_M_right != 0) __x = __x->_M_right;
+            while (__x->_M_right != nullptr) __x = __x->_M_right;
             return __x;
         }
     };
@@ -289,7 +289,7 @@ namespace not_std
             {
                 if (_M_root)
                 {
-                    _M_root->_M_parent = 0;
+                    _M_root->_M_parent = nullptr;
 
                     if (_M_nodes->_M_left)
                         _M_nodes = _M_nodes->_M_left;
@@ -331,7 +331,7 @@ namespace not_std
                 {
                     if (_M_nodes->_M_right == __node)
                     {
-                        _M_nodes->_M_right = 0;
+                        _M_nodes->_M_right = nullptr;
 
                         if (_M_nodes->_M_left)
                         {
@@ -345,7 +345,7 @@ namespace not_std
                         }
                     }
                     else // __node is on the left.
-                    _M_nodes->_M_left = 0;
+                    _M_nodes->_M_left = nullptr;
                 }
                 else
                     _M_root = 0;
@@ -1304,7 +1304,7 @@ namespace not_std
     _Avl_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>::
     _M_insert_(_Base_ptr __x, _Base_ptr __p, _Arg&& __v, _NodeGen& __node_gen)
     {
-        bool __insert_left = (__x != 0 || __p == _M_end()
+        bool __insert_left = (__x != nullptr || __p == _M_end()
                               || _M_impl._M_key_compare(_KeyOfValue()(__v), _S_key(__p)));
 
         _Link_type __z = __node_gen(_GLIBCXX_FORWARD(_Arg, __v));
@@ -1795,7 +1795,7 @@ namespace not_std
     _Avl_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>::
     _M_insert_node(_Base_ptr __x, _Base_ptr __p, _Link_type __z)
     {
-        bool __insert_left = (__x != 0 || __p == _M_end()
+        bool __insert_left = (__x != nullptr || __p == _M_end()
                               || _M_impl._M_key_compare(_S_key(__z),
                                                         _S_key(__p)));
 
