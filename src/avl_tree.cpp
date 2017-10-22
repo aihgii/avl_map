@@ -74,6 +74,16 @@ namespace not_std
     }
 
     static void
+    local_Avl_tree_fix_height(_Avl_tree_node_base* __x)
+    {
+        _Avl_tree_height hl = __x->_M_left
+            ? __x->_M_left->_M_height : 0;
+        _Avl_tree_height hr = __x->_M_right
+            ? __x->_M_right->_M_height : 0;
+        __x->_M_height = (hl > hr ? hl : hr) + 1;
+    }
+
+    static void
     local_Avl_tree_rotate_left(_Avl_tree_node_base* const __x,
                               _Avl_tree_node_base*& __root)
     {
@@ -92,17 +102,10 @@ namespace not_std
             __x->_M_parent->_M_right = __y;
         __y->_M_left = __x;
         __x->_M_parent = __y;
-    }
 
-#if !_GLIBCXX_INLINE_VERSION
-    /* Static keyword was missing on _Avl_tree_rotate_left.
-       Export the symbol for backward compatibility until
-       next ABI change.  */
-    void
-    _Avl_tree_rotate_left(_Avl_tree_node_base* const __x,
-                         _Avl_tree_node_base*& __root)
-    { local_Avl_tree_rotate_left (__x, __root); }
-#endif
+        local_Avl_tree_fix_height(__x);
+        local_Avl_tree_fix_height(__y);
+    }
 
     static void
     local_Avl_tree_rotate_right(_Avl_tree_node_base* const __x,
@@ -123,17 +126,10 @@ namespace not_std
             __x->_M_parent->_M_left = __y;
         __y->_M_right = __x;
         __x->_M_parent = __y;
-    }
 
-#if !_GLIBCXX_INLINE_VERSION
-    /* Static keyword was missing on _Avl_tree_rotate_right
-       Export the symbol for backward compatibility until
-       next ABI change.  */
-    void
-    _Avl_tree_rotate_right(_Avl_tree_node_base* const __x,
-                          _Avl_tree_node_base*& __root)
-    { local_Avl_tree_rotate_right (__x, __root); }
-#endif
+        local_Avl_tree_fix_height(__x);
+        local_Avl_tree_fix_height(__y);
+    }
 
     void
     _Avl_tree_insert_and_rebalance(const bool          __insert_left,
