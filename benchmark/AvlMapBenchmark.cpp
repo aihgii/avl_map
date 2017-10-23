@@ -11,7 +11,10 @@ BENCHMARK_DEFINE_F(MapBenchmarkFixture, RbMapOrderedInsertion)(benchmark::State&
         for (int i = 0; i < state.range(0); i++)
             m.emplace(i,i);
 }
-BENCHMARK_REGISTER_F(MapBenchmarkFixture, RbMapOrderedInsertion)->RangeMultiplier(2)->Range(1024,1024<<10);
+BENCHMARK_REGISTER_F(MapBenchmarkFixture, RbMapOrderedInsertion)
+        ->RangeMultiplier(2)
+        ->Range(8<<10,1024<<10)
+        ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapOrderedInsertion)(benchmark::State& state) {
     not_std::map<int,int> m;
@@ -19,7 +22,10 @@ BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapOrderedInsertion)(benchmark::State
         for (int i = 0; i < state.range(0); i++)
             m.emplace(i,i);
 }
-BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapOrderedInsertion)->RangeMultiplier(2)->Range(1024,1024<<10);
+BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapOrderedInsertion)
+        ->RangeMultiplier(2)
+        ->Range(8<<10,1024<<10)
+        ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(MapBenchmarkFixture, RbMapRandomInsertion)(benchmark::State& state) {
     std::random_device rd;
@@ -35,7 +41,10 @@ BENCHMARK_DEFINE_F(MapBenchmarkFixture, RbMapRandomInsertion)(benchmark::State& 
             m.emplace(*it, *it);
     }
 }
-BENCHMARK_REGISTER_F(MapBenchmarkFixture, RbMapRandomInsertion)->RangeMultiplier(2)->Range(1024,1024<<10);
+BENCHMARK_REGISTER_F(MapBenchmarkFixture, RbMapRandomInsertion)
+        ->RangeMultiplier(2)
+        ->Range(8<<10,1024<<10)
+        ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapRandomInsertion)(benchmark::State& state) {
     std::random_device rd;
@@ -50,7 +59,10 @@ BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapRandomInsertion)(benchmark::State&
         for (auto it = s.begin(); it != s.end(); it++)
             m.emplace(*it, *it);
 }
-BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapRandomInsertion)->RangeMultiplier(2)->Range(1024,1024<<10);
+BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapRandomInsertion)
+        ->RangeMultiplier(2)
+        ->Range(8<<10,1024<<10)
+        ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(MapBenchmarkFixture, RbMapAccess)(benchmark::State& state) {
     std::random_device rd;
@@ -70,7 +82,10 @@ BENCHMARK_DEFINE_F(MapBenchmarkFixture, RbMapAccess)(benchmark::State& state) {
             auto res = m[*it];
     }
 }
-BENCHMARK_REGISTER_F(MapBenchmarkFixture, RbMapAccess)->RangeMultiplier(2)->Range(1024,1024<<10);
+BENCHMARK_REGISTER_F(MapBenchmarkFixture, RbMapAccess)
+        ->RangeMultiplier(2)
+        ->Range(8<<10,1024<<10)
+        ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapAccess)(benchmark::State& state) {
     std::random_device rd;
@@ -90,7 +105,10 @@ BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapAccess)(benchmark::State& state) {
             auto res = m[*it];
     }
 }
-BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapAccess)->RangeMultiplier(2)->Range(1024,1024<<10);
+BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapAccess)
+        ->RangeMultiplier(2)
+        ->Range(8<<10,1024<<10)
+        ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(MapBenchmarkFixture, RbMapErase)(benchmark::State& state) {
     std::random_device rd;
@@ -110,7 +128,10 @@ BENCHMARK_DEFINE_F(MapBenchmarkFixture, RbMapErase)(benchmark::State& state) {
             m.erase(*it);
     }
 }
-BENCHMARK_REGISTER_F(MapBenchmarkFixture, RbMapErase)->RangeMultiplier(2)->Range(1024,1024<<10);
+BENCHMARK_REGISTER_F(MapBenchmarkFixture, RbMapErase)
+        ->RangeMultiplier(2)
+        ->Range(8<<10,1024<<10)
+        ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapErase)(benchmark::State& state) {
     std::random_device rd;
@@ -130,6 +151,9 @@ BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapErase)(benchmark::State& state) {
             m.erase(*it);
     }
 }
-BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapErase)->RangeMultiplier(2)->Range(1024,1024<<10);
+BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapErase)
+        ->RangeMultiplier(2)
+        ->Range(8<<10,1024<<10)
+        ->Unit(benchmark::kMillisecond);
 
 BENCHMARK_MAIN();
