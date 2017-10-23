@@ -92,44 +92,44 @@ BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapAccess)(benchmark::State& state) {
 }
 BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapAccess)->RangeMultiplier(2)->Range(1024,1024<<10);
 
-//BENCHMARK_DEFINE_F(MapBenchmarkFixture, RbMapErase)(benchmark::State& state) {
-//    std::random_device rd;
-//    std::mt19937 gen(rd());
-//    std::set<int> s;
-//    std::map<int,int> m;
-//
-//    while(s.size() < state.range(0))
-//    {
-//        auto key = gen();
-//        if (s.emplace(key).second)
-//            m.emplace(key,key);
-//    }
-//
-//    while (state.KeepRunning()) {
-//        for (auto it = s.begin(); it != s.end(); it++)
-//            m.erase(*it);
-//    }
-//}
-//BENCHMARK_REGISTER_F(MapBenchmarkFixture, RbMapErase)->RangeMultiplier(2)->Range(1024,1024<<10);
-//
-//BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapErase)(benchmark::State& state) {
-//    std::random_device rd;
-//    std::mt19937 gen(rd());
-//    std::set<int> s;
-//    not_std::map<int,int> m;
-//
-//    while(s.size() < state.range(0))
-//    {
-//        auto key = gen();
-//        if (s.emplace(key).second)
-//            m.emplace(key,key);
-//    }
-//
-//    while (state.KeepRunning()) {
-//        for (auto it = s.begin(); it != s.end(); it++)
-//            m.erase(*it);
-//    }
-//}
-//BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapErase)->RangeMultiplier(2)->Range(1024,1024<<10);
+BENCHMARK_DEFINE_F(MapBenchmarkFixture, RbMapErase)(benchmark::State& state) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::set<int> s;
+    std::map<int,int> m;
+
+    while(s.size() < state.range(0))
+    {
+        auto key = gen();
+        if (s.emplace(key).second)
+            m.emplace(key,key);
+    }
+
+    while (state.KeepRunning()) {
+        for (auto it = s.begin(); it != s.end(); it++)
+            m.erase(*it);
+    }
+}
+BENCHMARK_REGISTER_F(MapBenchmarkFixture, RbMapErase)->RangeMultiplier(2)->Range(1024,1024<<10);
+
+BENCHMARK_DEFINE_F(MapBenchmarkFixture, AvlMapErase)(benchmark::State& state) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::set<int> s;
+    not_std::map<int,int> m;
+
+    while(s.size() < state.range(0))
+    {
+        auto key = gen();
+        if (s.emplace(key).second)
+            m.emplace(key,key);
+    }
+
+    while (state.KeepRunning()) {
+        for (auto it = s.begin(); it != s.end(); it++)
+            m.erase(*it);
+    }
+}
+BENCHMARK_REGISTER_F(MapBenchmarkFixture, AvlMapErase)->RangeMultiplier(2)->Range(1024,1024<<10);
 
 BENCHMARK_MAIN();

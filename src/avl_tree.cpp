@@ -280,7 +280,7 @@ namespace not_std
         }
 
         local_Avl_tree_fix_height(__z->_M_parent);
-        local_Avl_tree_rebalance(__x->_M_parent, __root);
+        local_Avl_tree_rebalance(__z->_M_parent, __root);
 
         return __y;
     }
